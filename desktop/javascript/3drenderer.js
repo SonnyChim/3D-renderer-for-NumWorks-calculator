@@ -39,10 +39,15 @@ class renderer {
         this.sortingTolerance = 0.001
     }
     setFOV(fov) {
-        const halfScreenWidth = Math.tan(this.radians(fov / 2)) * 100;
-        const halfScreenHeight = halfScreenWidth * this.height / this.width;
         // virtual screen for projection
-        this.screen = { y1: -halfScreenWidth, z1: -halfScreenHeight, y2: halfScreenWidth, z2: halfScreenHeight, x: -100 };
+        const screenWidth = Math.tan(this.radians(fov / 2)) * 2;
+        const screenHeight = screenWidth * this.height / this.width;
+        this.screen = {
+            centerY: this.width / 2,
+            centerX: this.height / 2,
+            widthMultiplier: this.width / -screenWidth,
+            heightMultiplier: this.height / -screenHeight
+        };
     }
     drawTri2d(tri2d, color) {
         this.ctx.fillStyle = color;
@@ -56,8 +61,8 @@ class renderer {
             return null;
         }
         return {
-            x: Math.trunc((this.screen.y1 - (y / -x) * -this.screen.x) * (this.width / (this.screen.y1 - this.screen.y2))),
-            y: Math.trunc((this.screen.z1 + (z / -x) * -this.screen.x) * (this.height / (this.screen.z1 - this.screen.z2)))
+            x: Math.trunc(this.screen.centerY + y / x * this.screen.widthMultiplier),
+            y: Math.trunc(this.screen.centerX - z / x * this.screen.heightMultiplier)
         };
 
     }
