@@ -1,0 +1,8 @@
+{
+  "name": "3d_renderer",
+  "version": "0.0.1",
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  }
+}
